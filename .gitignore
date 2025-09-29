@@ -1,0 +1,72 @@
+## Visual Studio / Rider / .NET
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Rider
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Auto-generated files
+*.dbmdl
+*.bak
+*.log
+*.ldf
+*.ndf
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+*.nuget.props
+*.nuget.targets
+packages/
+*.ncrunchsolution
+*.ncrunchproject
+project.lock.json
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Entity Framework Migrations (generated)
+Migrations/
+
+# Publish outputs
+publish/
+*.pubxml
+*.pubxml.user
+
+# Configuration
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# Azure / Docker / CI
+.azure/
+docker-compose.override.yml
+.env
+
+# Others
+*.DS_Store
+Thumbs.db
