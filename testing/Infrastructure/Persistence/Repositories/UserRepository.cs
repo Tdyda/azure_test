@@ -24,4 +24,9 @@ public sealed class UserRepository : IUserRepository
         User.SetPassword(user, PasswordHash);
         await _db.Users.AddAsync(user, ct);
     }
+
+    public Task<User?> GetByEmailAsync(string email, CancellationToken ct)
+    {
+        return _db.Users.FirstOrDefaultAsync(x => x.Email.Value == email, ct);
+    }
 }

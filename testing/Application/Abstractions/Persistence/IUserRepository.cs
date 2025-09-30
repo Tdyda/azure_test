@@ -7,4 +7,5 @@ public interface IUserRepository
 {
     Task<bool> ExistsByEmail(Email email, CancellationToken ct);
     Task AddAsync(User user, String PasswordHash, CancellationToken ct);
+    Task<User?> GetByEmailAsync(string email, CancellationToken ct);
 }

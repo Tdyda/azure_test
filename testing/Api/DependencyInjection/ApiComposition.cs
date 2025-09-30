@@ -19,7 +19,7 @@ public static class ApiComposition
 }
 
 public sealed class RequestLoggingBehavior<TRequest, TResponse>
-    : IPipelineBehavior<TRequest, TResponse>
+    : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly ILogger<RequestLoggingBehavior<TRequest, TResponse>> _logger;
 
