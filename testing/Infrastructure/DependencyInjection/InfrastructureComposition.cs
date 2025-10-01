@@ -1,6 +1,7 @@
 ﻿using System.Net.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using testing.Application;
 using testing.Application.Abstractions;
 using testing.Application.Abstractions.Persistence;
 using testing.Application.Abstractions.Security;
@@ -13,7 +14,7 @@ namespace testing.Infrastructure.DependencyInjection;
 
 public static class InfrastructureComposition
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string? connStr)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string? connStr, IConfiguration cfg)
     {
         services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connStr));
 
@@ -22,6 +23,9 @@ public static class InfrastructureComposition
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddSingleton<IClock, SystemClock>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.Configure<RefreshTokenOptions>(cfg.GetSection("RefreshToken"));
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         
         return services;
     }

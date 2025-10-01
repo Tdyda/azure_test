@@ -29,4 +29,9 @@ public sealed class UserRepository : IUserRepository
     {
         return _db.Users.FirstOrDefaultAsync(x => x.Email.Value == email, ct);
     }
+
+    public Task<User?> GetByIdAsync(Guid id, CancellationToken ct)
+    {
+        return _db.Users.FirstOrDefaultAsync(x => x.Id == id, ct);
+    }
 }

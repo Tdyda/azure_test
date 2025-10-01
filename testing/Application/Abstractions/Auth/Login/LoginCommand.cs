@@ -2,4 +2,4 @@
 
 namespace testing.Application.Abstractions.Auth.Login;
 
-public sealed record LoginCommand(string Email, string Password) : IRequest<LoginResponse>;
+public sealed record LoginCommand(string Email, string Password, string? Ip, string? UserAgent) : IRequest<LoginResponse>;

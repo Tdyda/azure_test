@@ -9,7 +9,8 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; }
+    public DbSet<User> Users => Set<User>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -25,6 +26,17 @@ public class AppDbContext : DbContext
             cfg.Property(x => x.Surname).IsRequired().HasMaxLength(50);
             cfg.Property(x => x.UserName).IsRequired().HasMaxLength(50);
             cfg.Property(x => x.Password).IsRequired().HasMaxLength(100);
+        });
+
+        b.Entity<RefreshToken>(cfg =>
+        {
+            cfg.ToTable("RefreshTokens");
+            cfg.HasKey(x => x.Id);
+            cfg.Property(x => x.TokenHash).IsRequired().HasMaxLength(256);
+            cfg.Property(x => x.CreatedAtUtc).IsRequired();
+            cfg.Property(x => x.ExpiresAtUtc).IsRequired();
+            cfg.HasIndex(x => x.TokenHash).IsUnique();
+            cfg.HasIndex(x => x.UserId);
         });
     }
 }

@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 var cs = builder.Configuration.GetConnectionString("DefaultConnection");
 var jwt = builder.Configuration.GetSection("Jwt");
 var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["SigningKey"]!));
+var cfg = builder.Configuration;
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -37,7 +38,7 @@ builder.Services.AddControllers()
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddApiServices();
-builder.Services.AddInfrastructure(cs);
+builder.Services.AddInfrastructure(cs, cfg);
 
 var app = builder.Build();
 
