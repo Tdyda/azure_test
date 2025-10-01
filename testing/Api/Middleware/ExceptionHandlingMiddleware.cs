@@ -18,6 +18,10 @@ public sealed class ExceptionHandlingMiddleware(RequestDelegate next, ProblemDet
         {
             await WriteProblem(ctx, StatusCodes.Status400BadRequest, ex.Message);
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            await WriteProblem(ctx, StatusCodes.Status401Unauthorized, ex.Message);
+        }
         catch (Exception)
         {
             await WriteProblem(ctx, StatusCodes.Status500InternalServerError, "Unexpected error.");

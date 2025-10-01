@@ -27,7 +27,7 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
 
         var result = _hasher.VerifyHashedPassword(user, user.Password, cmd.Password);
         if(result == PasswordVerificationResult.Failed)
-            throw new UnauthorizedAccessException("InvalidCredentials");
+            throw new UnauthorizedAccessException("Invalid Credentials");
         
         var token = _jwt.GenerateToken(
             userId: user.Id,
