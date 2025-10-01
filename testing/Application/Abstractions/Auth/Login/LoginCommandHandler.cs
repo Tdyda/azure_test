@@ -10,13 +10,17 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
 {
     private readonly IUserRepository _users;
     private readonly IPasswordHasher<User> _hasher;
-    private readonly IJwtTokenGenerator _jwt;
+    private readonly ITokenService _tokenService;
+    private readonly IRefreshTokenRepository _refreshToken;
+    private readonly IUnitOfWork _uow;
 
-    public LoginCommandHandler(IUserRepository users, IPasswordHasher<User> hasher, IJwtTokenGenerator jwt)
+    public LoginCommandHandler(IUserRepository users, IPasswordHasher<User> hasher, ITokenService tokenService, IRefreshTokenRepository refreshToken, IUnitOfWork uow)
     {
         _users = users;
         _hasher = hasher;
-        _jwt = jwt;
+        _tokenService = tokenService;
+        _refreshToken = refreshToken;
+        _uow = uow;
     }
 
     public async Task<LoginResponse> Handle(LoginCommand cmd, CancellationToken ct)
@@ -29,12 +33,14 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginRes
         if(result == PasswordVerificationResult.Failed)
             throw new UnauthorizedAccessException("Invalid Credentials");
         
-        var token = _jwt.GenerateToken(
-            userId: user.Id,
-            email: user.Email.Value,
-            username: user.UserName,
-            extraClaims: null);
+        var (access, refresh) = _tokenService.IssueTokenPair(user.Id, user.Email.Value, user.UserName);
         
-        return new LoginResponse(token);
+        var now = DateTime.UtcNow;
+        var tokenHash = _tokenService.HashRefreshToken(refresh);
+        var rt = RefreshToken.Create(user.Id, tokenHash, now, _tokenService.GetRefreshExpiryUtc(), cmd.Ip, cmd.UserAgent);
+        await _refreshToken.AddAsync(rt, ct);
+        await _uow.SaveChangeAsync(ct);
+        
+        return new LoginResponse(access, refresh);
     }
 }
